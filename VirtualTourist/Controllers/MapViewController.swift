@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MapKit
+import CoreData
 
 class MapViewController: UIViewController {
     
@@ -16,12 +18,23 @@ class MapViewController: UIViewController {
     @IBOutlet weak var deletePromptLocation: NSLayoutConstraint!
     @IBOutlet weak var deletePromptView: UIView!
     @IBOutlet weak var tNavigationItem: UINavigationItem!
+    @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = editButtonItem
+        mapView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(createPin(sender:))))
         
+        let pins = fetchPins()
+        print("Startup with \(pins.count) pins")
+        mapView.addAnnotations(fetchPins())
+        
+        MapPreferences.shared.load()
+        if let mapRegion = MapPreferences.shared.mapRegion {
+            mapView.setRegion(mapRegion, animated: true)
+        }
+
         self.setEditing(false, animated: false)
     }
     
@@ -30,5 +43,5 @@ class MapViewController: UIViewController {
         
         deletePromptLocation.constant = (editing) ? 0 : 60;
     }
-
+    
 }

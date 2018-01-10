@@ -10,7 +10,7 @@ import CoreData
 
 // MARK: - CoreDataStack
 
-struct CoreDataStack {
+class CoreDataStack {
     
     // MARK: Properties
     
@@ -73,6 +73,8 @@ struct CoreDataStack {
         } catch {
             print("unable to add store at \(dbURL)")
         }
+        
+        print("Done Store Setup")
     }
     
     // MARK: Utils
@@ -140,6 +142,7 @@ extension CoreDataStack {
                 self.persistingContext.perform() {
                     do {
                         try self.persistingContext.save()
+                        print("Persisting Context Saved")
                     } catch {
                         fatalError("Error while saving persisting context: \(error)")
                     }

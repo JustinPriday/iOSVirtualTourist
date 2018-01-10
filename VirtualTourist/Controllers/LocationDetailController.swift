@@ -7,29 +7,80 @@
 //
 
 import UIKit
+import CoreData
+import MapKit
 
 class LocationDetailController: UIViewController {
+    
+    var pin: Pin? = nil
+    
+    @IBOutlet weak var imageCollection: UICollectionView!
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var infoMessage: UILabel!
+    @IBOutlet weak var imagesButton: UIButton! //for reload and delete
+    
+    var selectedIndexes   = [IndexPath]()
+    var insertedIndexPaths: [IndexPath]!
+    var deletedIndexPaths : [IndexPath]!
+    var updatedIndexPaths : [IndexPath]!
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<Image> = {
+        let fetchRequest = NSFetchRequest<Image>(entityName: "Image")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin!);
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        let fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultsController.delegate = self
+        return fetchResultsController
+    }()
 
+    //MARK: UIViewController Delegates
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if let pin = pin {
+            mapView.addAnnotation(pin)
+            mapView.setCenter(pin.coordinate, animated: true)
+        }
+        
+        self.imagesButton.setTitle("New Collection", for: .normal)
+        self.imageCollection.allowsMultipleSelection = true
+        
         // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        print("Images View Will Appear")
+        do {
+            try fetchedResultsController.performFetch()
+            print("Images loaded from core data")
+        } catch { }
+        
+        // Let's searh new photos if we don't have them yet
+        if fetchedResultsController.fetchedObjects!.count == 0 {
+            loadNewImageSet(pin: pin!)
+        } else {
+            self.imageCollection.isHidden = false
+            self.infoMessage.isHidden = true
+            self.imagesButton.isEnabled = true
+        }
     }
-    */
+
+    //MARK: IBAction
+    
+    @IBAction func imageButtonPressed(_ sender: Any) {
+        if let selectedCount = imageCollection.indexPathsForSelectedItems?.count, selectedCount > 0 {
+            print("Do Delete Images")
+            if let indexPaths = imageCollection.indexPathsForSelectedItems {
+                self.deleteSelectedImages(indexPaths: indexPaths)
+            }
+        } else {
+            self.loadNewImageSet(pin: pin!)
+        }
+    }
 
 }
