@@ -62,10 +62,9 @@ extension FlickrClient {
                         
                         for photoDictionary in photosArray {
                             let imageURLString = photoDictionary["url_m"] as! String
-                            let image = Image(imageURL: imageURLString, pin: pin, context: stack.context)
+                            let imageTitle = photoDictionary["title"] as! String
+                            let image = Image(title: imageTitle, imageURL: imageURLString, pin: pin, context: stack.context)
                             
-                            print("Found image at \(image.imageURL ?? "No URL")")
-
                             self.downloadImageForPhoto(image: image, completionHandler: { (success, error) in
                                 if success {
                                     DispatchQueue.main.async {
@@ -78,19 +77,6 @@ extension FlickrClient {
                                     }
                                 }
                             })
-                            
-//                            self.downloadImageForPhoto(photo) { (success, errorString) in
-//                                if success {
-//                                    dispatch_async(dispatch_get_main_queue(), {
-//                                        CoreDataStackManager.sharedInstance().saveContext()
-//                                        completionHandler(success: true, errorString: nil)
-//                                    })
-//                                } else {
-//                                    dispatch_async(dispatch_get_main_queue(), {
-//                                        completionHandler(success: false, errorString: errorString)
-//                                    })
-//                                }
-//                            }
                         }
                         if let images = pin.images {
                             print("Got \(images.count) Images")

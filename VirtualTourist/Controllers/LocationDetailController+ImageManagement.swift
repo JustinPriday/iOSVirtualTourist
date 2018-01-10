@@ -25,10 +25,8 @@ extension LocationDetailController {
         stack.save()
         
         FlickrClient.sharedInstance.getImagesForPin(pin: pin, stack: stack) { (success, error) in
-            print("Got Images")
             
             if let objects = self.fetchedResultsController.fetchedObjects {
-                print("Got \(objects.count) Images")
                 if objects.count > 0 {
                     self.imageCollection.isHidden = false
                     self.infoMessage.isHidden = true

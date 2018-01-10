@@ -12,6 +12,8 @@ import MapKit
 
 class LocationDetailController: UIViewController {
     
+    let REGION_RANGE_METERS = 5000
+    
     var pin: Pin? = nil
     
     @IBOutlet weak var imageCollection: UICollectionView!
@@ -45,12 +47,16 @@ class LocationDetailController: UIViewController {
         if let pin = pin {
             mapView.addAnnotation(pin)
             mapView.setCenter(pin.coordinate, animated: true)
+            
+            let viewRegion: MKCoordinateRegion = MKCoordinateRegionMakeWithDistance(pin.coordinate, CLLocationDistance(REGION_RANGE_METERS), CLLocationDistance(REGION_RANGE_METERS))
+            let adjustedRegion: MKCoordinateRegion = mapView.regionThatFits(viewRegion)
+            
+            mapView.setRegion(adjustedRegion, animated: true)
+            
         }
         
         self.imagesButton.setTitle("New Collection", for: .normal)
         self.imageCollection.allowsMultipleSelection = true
-        
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {

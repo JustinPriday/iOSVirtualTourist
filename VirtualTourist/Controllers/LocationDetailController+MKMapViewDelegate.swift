@@ -22,10 +22,26 @@ extension LocationDetailController: MKMapViewDelegate {
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 view.canShowCallout = false
                 view.animatesDrop = true
-                view.isDraggable = false
+                view.isDraggable = true
             }
             return view
         }
         return nil
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        if oldState == .ending {
+            
+            let delegate = UIApplication.shared.delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            let pin = view.annotation as! Pin
+            
+            pin.pageCount = nil
+
+            stack.save()
+
+            self.loadNewImageSet(pin: pin)
+        }
     }
 }

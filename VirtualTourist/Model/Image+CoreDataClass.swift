@@ -21,9 +21,10 @@ public class Image: NSManagedObject {
         return nil
     }
     
-    convenience init(imageURL: String, pin: Pin, context: NSManagedObjectContext) {
+    convenience init(title: String, imageURL: String, pin: Pin, context: NSManagedObjectContext) {
         if let entity = NSEntityDescription.entity(forEntityName: "Image", in: context) {
             self.init(entity: entity, insertInto: context)
+            self.title = title
             self.imageURL = imageURL
             self.pin = pin
         } else {

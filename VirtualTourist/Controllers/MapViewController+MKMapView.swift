@@ -22,6 +22,10 @@ extension MapViewController : MKMapViewDelegate {
         isEditing ? deletePin(pin: pin) : viewPin(pin: pin)
     }
     
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        view.isSelected = true
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Pin {
             let identifier = "Pin"
@@ -34,11 +38,26 @@ extension MapViewController : MKMapViewDelegate {
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 view.canShowCallout = false
                 view.animatesDrop = true
-                view.isDraggable = false
+                view.isDraggable = true
+                view.isSelected = true
             }
             return view
         }
         return nil
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        if !isEditing && oldState == .ending {
+            
+            let delegate = UIApplication.shared.delegate as! AppDelegate
+            let stack = delegate.stack
+            
+            let pin = view.annotation as! Pin
+            pin.deleteImages(context: stack.context)
+            pin.pageCount = nil
+            
+            stack.save()
+        }
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {

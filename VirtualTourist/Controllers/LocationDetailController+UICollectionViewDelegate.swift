@@ -59,7 +59,6 @@ extension LocationDetailController: UICollectionViewDataSource, UICollectionView
     // MARK: Core Data
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("NSFetchedResults Will Change")
         insertedIndexPaths = [IndexPath]()
         deletedIndexPaths  = [IndexPath]()
         updatedIndexPaths  = [IndexPath]()

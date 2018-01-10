@@ -6,6 +6,8 @@
 //  Copyright © 2016 udacity.com. All rights reserved.
 //
 
+//  Used with only edit to include this commant as instructed.
+
 import CoreData
 
 // MARK: - CoreDataStack
