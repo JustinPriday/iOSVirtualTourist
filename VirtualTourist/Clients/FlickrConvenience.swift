@@ -109,19 +109,12 @@ extension FlickrClient {
         
         let _ = taskForGETMethod(url: image.imageURL, parameters: [:], doParse: false) { (result, error) in
             if error != nil {
-                image.imagePath = "unavailable"
+                image.imageData = nil
                 completionHandler(false, "Unable to download Photo")
             } else {
                 if let result = result {
                     DispatchQueue.main.async {
-                        let fileName = (image.imageURL! as NSString).lastPathComponent
-                        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-                        let pathArray = [path, fileName]
-                        let fileURL = NSURL.fileURL(withPathComponents: pathArray)!
-                        
-                        FileManager.default.createFile(atPath: fileURL.path, contents: result as? Data, attributes: nil)
-                        
-                        image.imagePath = fileURL.path
+                        image.imageData = result as? NSData
                         completionHandler(true, nil)
                     }
                 } else {

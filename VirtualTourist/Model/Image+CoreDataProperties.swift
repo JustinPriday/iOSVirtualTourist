@@ -18,7 +18,7 @@ extension Image {
     }
 
     @NSManaged public var title: String?
-    @NSManaged public var imagePath: String?
+    @NSManaged public var imageData: NSData?
     @NSManaged public var imageURL: String?
     @NSManaged public var pin: Pin?
     

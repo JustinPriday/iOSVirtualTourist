@@ -15,9 +15,8 @@ import CoreData
 public class Image: NSManagedObject {
     
     var image: UIImage? {
-        if imagePath != nil {
-            let fileURL = getImageFileURL()
-            return UIImage(contentsOfFile: fileURL.path!)
+        if imageData != nil {
+            return UIImage(data: imageData! as Data)
         }
         return nil
     }
@@ -31,27 +30,4 @@ public class Image: NSManagedObject {
             fatalError("Unknown Entity Name")
         }
     }
-    
-    func getImageFileURL() -> NSURL {
-        let fileName = (imagePath! as NSString).lastPathComponent
-        let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let pathArray:[String] = [dirPath, fileName]
-        let fileURL = NSURL.fileURL(withPathComponents: pathArray)
-        return fileURL! as NSURL
-    }
-    
-    public override func prepareForDeletion() {
-        if (imagePath == nil) {
-            return
-        }
-        let fileURL = getImageFileURL()
-        if FileManager.default.fileExists(atPath: fileURL.path!) {
-            do {
-                try FileManager.default.removeItem(atPath: fileURL.path!)
-            } catch let error as NSError {
-                print(error.userInfo)
-            }
-        }
-    }
-    
 }

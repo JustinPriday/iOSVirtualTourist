@@ -25,7 +25,7 @@ extension LocationDetailController: UICollectionViewDataSource, UICollectionView
         
         let image = fetchedResultsController.object(at: indexPath)
         
-        if image.imagePath != nil {
+        if image.imageData != nil {
             cell.loadingActivity.stopAnimating()
             cell.locationImage.image = image.image
             cell.cellBG.isHidden = true
