@@ -13,6 +13,8 @@ import MapKit
 class LocationDetailController: UIViewController {
     
     let REGION_RANGE_METERS = 5000
+    let CELL_SPACING = 4
+    let CELL_COLUMNS = 3
     
     var pin: Pin? = nil
     

@@ -14,6 +14,7 @@ class MapViewController: UIViewController {
     
     let DELETE_OFF_POSITION = -60.0
     let DELETE_ON_POSITION = 0.0
+    let AUTOSAVE_PERIOD = 60    //in seconds
     
     @IBOutlet weak var deletePromptLocation: NSLayoutConstraint!
     @IBOutlet weak var deletePromptView: UIView!
@@ -34,6 +35,10 @@ class MapViewController: UIViewController {
         if let mapRegion = MapPreferences.shared.mapRegion {
             mapView.setRegion(mapRegion, animated: true)
         }
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        stack.autoSave(AUTOSAVE_PERIOD)
 
         self.setEditing(false, animated: false)
     }

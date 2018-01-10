@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-extension LocationDetailController: UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+extension LocationDetailController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let sections = fetchedResultsController.sections {
@@ -18,6 +18,13 @@ extension LocationDetailController: UICollectionViewDataSource, UICollectionView
             return currentSection.numberOfObjects
         }
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidth = (Int(collectionView.bounds.size.width) - CELL_SPACING) / CELL_COLUMNS
+        return CGSize(width: cellWidth, height: cellWidth)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
